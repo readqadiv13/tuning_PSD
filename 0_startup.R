@@ -1018,10 +1018,10 @@ write2. <- function(dL, name = NULL, ...) {
     }
     min2.  <-  function (x, na = F)  if (is.atomic (x)) min2_base. (x, na)  else if (is.list (x)) {
                       list2tibble. (x) %>% select_if (~ is.numeric (.) | is_time. (.)) %>% sapply (., min2_base., na) } else  NA
-    which.max0.  <-  function (x, Nth = 1:1)  if (is.atomic (x) && is.numeric (x) || is_time. (x))  max. (x, Nth)  %>% {map. (., ~ which (x == .))}
+    which.max0.  <-  function (x, Nth = 1:1)  if (is.atomic (x) && is.numeric (x) || is_time. (x))  max. (x, Nth)  %>% {map. (., ~ which (x == .))} %>% return (.)
     which.max.  <-  function (x, Nth = 1)  if (is.atomic (x)) which.max0. (x, Nth)  else if (is.list (x)) {    #  which.max0. (c (9, NA, 8:1), 1:2)  which.max0. (c (1,1,1))
                       list2tibble. (x) %>% select_if (~ is.numeric (.) | is_time. (.)) %>% sapply (., which.max0., Nth) }  else  NA
-    which.min0.  <-  function (x, Nth = 1:1)  if (is.atomic (x) && is.numeric (x) || is_time. (x))  min. (x, Nth)  %>% {map. (., ~ which (x == .))}
+    which.min0.  <-  function (x, Nth = 1:1)  if (is.atomic (x) && is.numeric (x) || is_time. (x))  min. (x, Nth)  %>% {map. (., ~ which (x == .))} %>% return (.)
     which.min.  <-  function (x, Nth = 1)  if (is.atomic (x)) which.min0. (x, Nth)  else if (is.list (x)) {    #  which.min. (c (3,-10,5,-88), 1:2)
                       list2tibble. (x) %>% select_if (~ is.numeric (.) | is_time. (.)) %>% sapply (., which.min0., Nth) }  else  NA
     delta0.  <-  function (x, unit = 'day')  if (is.atomic (x) && is.numeric (x)) { range (x, na.rm = T) %>% diff (.) %>% as.numeric (.)
