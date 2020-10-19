@@ -1,201 +1,220 @@
-    ##  (ÅL-`) .°oO (Distribution inference in the special case when you know x & y position in the PDF coordinate system, 2019-01-29)
-    ## https://en.wikipedia.org/wiki/List_of_probability_distributions
-    ## https://www.vosesoftware.com/riskwiki/Distributionsbycategory.php
-    ## https://www.trifields.jp/r-cran-task-view-probability-distributions-693
-    ## https://github.com/cran/propagate/blob/master/R/distr-densities.R
-    ## https://pdfs.semanticscholar.org/cf53/f8c9dfa71bf17649feb86af5d7d8d294b06a.pdf
+## (ÅL-`) .°oO (Distribution inference in the special case when you know x & y position in the PDF coordinate system, 2019-01-29)
+## https://en.wikipedia.org/wiki/List_of_probability_distributions
+## https://www.vosesoftware.com/riskwiki/Distributionsbycategory.php
+## https://www.trifields.jp/r-cran-task-view-probability-distributions-693
+## https://github.com/cran/propagate/blob/master/R/distr-densities.R
+## https://pdfs.semanticscholar.org/cf53/f8c9dfa71bf17649feb86af5d7d8d294b06a.pdf
 
-    skipMess. (library ('minpack.lm'))
-    formals (nlsLM) $ 'control'  <-  nls.lm.control (maxiter = 1024, nprint = 0)    #  nprint = 1 denotes to show results
+skipMess.(library('minpack.lm'))
+formals(nlsLM)$'control' <- nls.lm.control(maxiter = 1024, nprint = 0)  # nprint = 1 denotes to show results
 
-    ##  Distribution names in the archive  == (2019-02-16) ========================    #  'Frechet'  'Levy'  bring error when encoding.
-    distN.  <-  paste (c ('Amoroso', 'Benini', 'Beta', 'Beta Prime', 'BHP', 'Burr VIII', 'Burr XII', 'Cauchy', 'Chi', 'Dagum', 'Dagum2','Exponentially Beta',
-                    'Exponentially Gamma', 'Exponentially Generalized Beta', 'Exponentially modified Gaussian (type 1)', 'Exponentially modified Gaussian (type 2)',
-                    'Exponentially Power', 'Fatigue Life', 'Four-parameter Beta', 'Four-parameter Kumaraswamy', 'Frechet', 'Gamma', 'Generalized Beta Prime',
-                    'Generalized Beta of the second kind', 'Generalized Fisher-Tippett', 'Generalized Gamma', 'Generalized Gumbel', 'Generalized Inverse Gaussian',
-                    'Generalized Normal ver.1', 'Generalized Normal ver.2', 'Generalized Pearson VII', 'Gumbel', 'Inverse Chi', 'Inverse Gamma', 'Inverse Gaussian',
-                    'Inverse Rayleigh', 'Johnson\'s SB', 'Johnson\'s SU', 'Levy', 'Logistic', 'Log-Gamma', 'Log-Logistic', 'Log-Normal', 'Nakagami', 'Normal',
-                    'Nukiyama-Tanasawa', 'Pearson III', 'Pearson V', 'Pearson VI', 'Pearson VII', 'PERT', 'PERT2', 'Prentice', 'Rayleigh', 'RBW', 'Rice', 'Shifted Gompertz',
-                    'Singh-Maddala', 'Skew Normal', 'Skew Log-Normal', 'Student\'s T', 'Three-parameter Lifetime', 'Three-parameter Log-Hyperbolic',
-                    'Three-parameter Student', 'Three-parameter Weibull', 'Weibull'), 'distribution')
-    distN2.  <-  c ('Dagum2', 'exGauss4', 'GBP', 'GB2', 'SM', 'JSU', 'Log-Logistic')    #  'Log-Normal', 'Nukiyama-Tanasawa', 'LH3', 'Weibull',
 
-    ##  Distribution model archive  ========================
-    arXiv.  <- function (df, ... ) {
-            def. (c ('x', 'y'), list (xy.coords (df) $ 'x', xy.coords (df) $ 'y'))
-            mdlL  <-  list (amoF. (x,y), beniniF. (x,y), betaF. (x,y), betaPrimeF. (x,y), bhpF. (x,y), burr8F. (x,y), burr12F. (x,y), cauchyF. (x,y), chiF. (x,y), dagumF. (x,y),
-                          dagum2F. (x,y), exBetaF. (x,y), exGammaF. (x,y), exGenBetaF. (x,y), exGauss3F. (x,y), exGauss4F. (x,y), exPowerF. (x,y), fatigueF. (x,y), beta4F. (x,y),
-                          kuma4F. (x,y), frechetF. (x, y), gammaF. (x,y), gbpF. (x,y), gb2F. (x,y), gftF. (x,y), gGammaF. (x,y), gGumbelF. (x,y), gigF. (x,y), gn1F. (x,y), gn2F. (x,y),
-                          gPearson7F. (x,y), gumbelF. (x,y), invChiF. (x,y), invGammaF. (x,y), invGaussF. (x,y), invRayleighF. (x,y), jsbF. (x,y), jsuF. (x,y), levyF. (x,y), logisF. (x,y),
-                          logGamF. (x,y), logLogF. (x, y), logNormF. (x,y), nakagamiF. (x, y), normF. (x,y), nukiF. (x,y), pearson3F. (x,y), pearson5F. (x,y), pearson6F. (x,y),
-                          pearson7F. (x,y), pertF. (x,y), pert2F. (x,y), prenticeF. (x,y), rayleighF. (x,y), rbwF. (x,y), riceF. (x,y), shGompF. (x,y), sinMadF. (x,y), skewNF. (x,y),
-                          skewLogNF. (x,y), studentsTF. (x,y), life3F. (x,y), logHype3F. (x,y), student3F. (x,y), weibull3F. (x,y), weibullF. (x,y) )  %>%  setNames (distN.)
-            return (mdlL)
+## Distribution names in the archive == (2019-02-16) ========================  # 'Frechet'  'Levy'  bring error when encoding
+distN. <- paste(c('Amoroso', 'Benini', 'Beta', 'Beta Prime', 'BHP', 'Burr VIII', 'Burr XII', 'Cauchy', 'Chi', 'Dagum', 'Dagum2','Exponentially Beta',
+                  'Exponentially Gamma', 'Exponentially Generalized Beta', 'Exponentially modified Gaussian (type 1)', 'Exponentially modified Gaussian (type 2)',
+                  'Exponentially Power', 'Fatigue Life', 'Four-parameter Beta', 'Four-parameter Kumaraswamy', 'Frechet', 'Gamma', 'Generalized Beta Prime',
+                  'Generalized Beta of the second kind', 'Generalized Fisher-Tippett', 'Generalized Gamma', 'Generalized Gumbel', 'Generalized Inverse Gaussian',
+                  'Generalized Normal ver.1', 'Generalized Normal ver.2', 'Generalized Pearson VII', 'Gumbel', 'Inverse Chi', 'Inverse Gamma', 'Inverse Gaussian',
+                  'Inverse Rayleigh', 'Johnson\'s SB', 'Johnson\'s SU', 'Levy', 'Logistic', 'Log-Gamma', 'Log-Logistic', 'Log-Normal', 'Nakagami', 'Normal',
+                  'Nukiyama-Tanasawa', 'Pearson III', 'Pearson V', 'Pearson VI', 'Pearson VII', 'PERT', 'PERT2', 'Prentice', 'Rayleigh', 'RBW', 'Rice', 'Shifted Gompertz',
+                  'Singh-Maddala', 'Skew Normal', 'Skew Log-Normal', 'Student\'s T', 'Three-parameter Lifetime', 'Three-parameter Log-Hyperbolic',
+                  'Three-parameter Student', 'Three-parameter Weibull', 'Weibull'), 'distribution')
+distN2. <- c('Dagum2', 'exGauss4', 'GBP', 'GB2', 'SM', 'JSU', 'Log-Logistic')  # 'Log-Normal', 'Nukiyama-Tanasawa', 'LH3', 'Weibull',
+
+
+## Distribution model archive ========================
+arXiv. <- function(df, ... ) {
+    def.(c('x', 'y'), list(xy.coords(df)$'x', xy.coords(df)$'y'))
+    mdlL <- list(
+        amoF.(x,y), beniniF.(x,y), betaF.(x,y), betaPrimeF.(x,y), bhpF.(x,y), burr8F.(x,y), burr12F.(x,y), cauchyF.(x,y), chiF.(x,y), dagumF.(x,y),
+        dagum2F.(x,y), exBetaF.(x,y), exGammaF.(x,y), exGenBetaF.(x,y), exGauss3F.(x,y), exGauss4F.(x,y), exPowerF.(x,y), fatigueF.(x,y), beta4F.(x,y),
+        kuma4F.(x,y), frechetF.(x, y), gammaF.(x,y), gbpF.(x,y), gb2F.(x,y), gftF.(x,y), gGammaF.(x,y), gGumbelF.(x,y), gigF.(x,y), gn1F.(x,y), gn2F.(x,y),
+        gPearson7F.(x,y), gumbelF.(x,y), invChiF.(x,y), invGammaF.(x,y), invGaussF.(x,y), invRayleighF.(x,y), jsbF.(x,y), jsuF.(x,y), levyF.(x,y), logisF.(x,y),
+        logGamF.(x,y), logLogF.(x, y), logNormF.(x,y), nakagamiF.(x, y), normF.(x,y), nukiF.(x,y), pearson3F.(x,y), pearson5F.(x,y), pearson6F.(x,y),
+        pearson7F.(x,y), pertF.(x,y), pert2F.(x,y), prenticeF.(x,y), rayleighF.(x,y), rbwF.(x,y), riceF.(x,y), shGompF.(x,y), sinMadF.(x,y), skewNF.(x,y),
+        skewLogNF.(x,y), studentsTF. (x,y), life3F. (x,y), logHype3F.(x,y), student3F.(x,y), weibull3F.(x,y), weibullF.(x,y)
+    ) %>% setNames(distN.)
+    return (mdlL)
+}
+
+miniXiv. <- function(df, ... ) {
+    def.(c('x', 'y'), list(xy.coords(df)$'x', xy.coords(df)$'y'))
+    mdlL <- list(#  logNormF. (x,y), nukiF. (x,y), logHype3F. (x,y), weibullF. (x,y),
+        dagum2F.(x,y), exGauss4F.(x,y), gbpF.(x,y), gb2F.(x,y), sinMadF.(x,y), jsuF.(x,y), logLogF.(x, y)
+    ) %>% setNames(distN2.)
+    return (mdlL)
+}
+
+
+## Quasi-y vector generated by a model ========================
+arYiv. <- function(df, x, ... ) {  # mdl is got by arXiv.(), and bingo is got by which.min(getAIC.()). x is a vector in the target range.
+    mdlL <- arXiv.(df)
+    bingo <- getRMSE2.(mdlL) %>% which.min(.)  # bingo also has the distribution name. try 'bingo'.
+    mdl <- mdlL [[bingo]]
+    yout <- function(bingo) list(amoY., beniniY., betaY., betaPrimeY., bhpY., burr8Y., burr12Y., cauchyY., chiY., dagumY., dagum2Y., exBetaY., exGammaY.,
+        exGenBetaY., exGauss3Y., exGauss4Y., exPowerY., fatigueY., beta4Y., kuma4Y., frechetY., gammaY., gbpY., gb2Y., gftY.,
+        gGammaY., gGumbelY., gigY., gn1Y., gn2Y., gPearson7Y., gumbelY., invChiY., invGammaY., invGaussY., invRayleighY.,
+        jsbY., jsuY., levyY., logisY., logGamY., logLogY., logNormY., nakagamiY., normY., nukiY., pearson3Y., pearson5Y.,
+        pearson6Y., pearson7Y., pertY., pert2Y., prenticeY., rayleighY., rbwY., riceY., shGompY., sinMadY., skewNY.,
+        skewLogNY., studentsTY., life3Y., logHype3Y., student3Y., weibull3Y., weibullY. ) [[bingo]]
+    qY <- yout(bingo)(mdl, x)
+    return (qY)
+}
+
+arYivAll.  <- function(df, x, ... ) {  # mdl is got by arXiv.(), and bingo is got by which.min(getAIC.()). x is a vector in the target range.
+    mdlL <- arXiv.(df)
+    yout <- function (bingo) list(amoY., beniniY., betaY., betaPrimeY., bhpY., burr8Y., burr12Y., cauchyY., chiY., dagumY., dagum2Y., exBetaY., exGammaY.,
+        exGenBetaY., exGauss3Y., exGauss4Y., exPowerY., fatigueY., beta4Y., kuma4Y., frechetY., gammaY., gbpY., gb2Y., gftY.,
+        gGammaY., gGumbelY., gigY., gn1Y., gn2Y., gPearson7Y., gumbelY., invChiY., invGammaY., invGaussY., invRayleighY.,
+        jsbY., jsuY., levyY., logisY., logGamY., logLogY., logNormY., nakagamiY., normY., nukiY., pearson3Y., pearson5Y.,
+        pearson6Y., pearson7Y., pertY., pert2Y., prenticeY., rayleighY., rbwY., riceY., shGompY., sinMadY., skewNY.,
+        skewLogNY., studentsTY., life3Y., logHype3Y., student3Y., weibull3Y., weibullY. ) [[bingo]]
+    yL <- list()
+    for (i in seq(66)) yL[[i]] <- yout(i)(mdlL[[i]], x)
+    return (yL)
+}
+
+miniYiv. <- function(df, x, ... ) {
+    if (all(is.na(df))) return (NA)
+    mdlL <- miniXiv.(df)
+    bingo <- getRMSE2.(mdlL) %>% which.min(.)  # getAIC2.(mdlL)
+    mdl <  mdlL[[bingo]]
+    yout <- function(bingo) list(dagum2Y., exGauss4Y., gbpY., gb2Y., sinMadY., jsuY., logLogY.)[[bingo]]
+    qY <- yout(bingo)(mdl, x)
+    return (qY)
+}  # ex) yBase <- miniYiv.(dfBase, cx = dfRef[, 1])
+
+miniXYiv. <- function(df, ... ) {
+    if (is.na(df) %>% all()) return (NA)
+    mdlL <- miniXiv.(df)
+    bingo <- getRMSE2.(mdlL) %>% which.min()  # return the best numer with its name
+    mdl <- mdlL[[bingo]]
+    data.frame(x = df[, 1], y = fitted(mdl)) %>% return (.)
+}
+
+
+## AIC evaluation by calling distribution archive (NOTE: mdlL is got by arXiv.(df)) == (2019-11-05) ========================
+    getAIC. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN.) %>% return (.)
+    getAIC2. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN2.) %>% return (.)
+    getRMSE. <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN.) %>% return (.)
+    getRMSE2 <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN2.) %>% return (.)
+
+
+## Residual Sum of Square == (2019-05-23) ========================
+rssFit. <- function(yRef, yBase1, yBase2, ... ) {
+    rss <- rep(NA, 1e4 +1)
+    ratios <- seq(0, 1, by = 1e-4)
+    for (i in seq_along (ratios)) rss[i] <- {yRef - (ratios[i] *yBase1 +(1 -ratios[i]) *yBase2)} %>% {sum(. ^2)}
+    finalAns <- which.min(rss) %>% ratios[.]
+  # quickPlot.(list(data.frame(ratios, rss)), Xlims = c(0, 1), Xlab = 'Mixing Ratio of Base', Ylab = 'Residual Sum of Square'); points(finalAns, min(rss), pch = 19)
+    return (finalAns)
+}
+
+
+## Residual Sum of Square ver.2 == (2019-11-14) ========================
+rssFit2. <- function(yRef, yBase1, yBase2, yBase3, refx, cx, ... ) {  # cx means composite x1 +x2 for y1 & y2.
+    LRX <- function(Lper, Rper, ... ) {
+        cumsum(0.5 *diff(refx) * (yRef[-1] +yRef[-length (yRef)])) %>%  # plot(.)  # This becomes a sigmoid curve
+        {c(whichNear.(vec = ., ref = Lper), whichNear.(vec = ., ref = Rper)) +1} %>% refx[.] %>% return (.)
     }
-    miniXiv.  <- function (df, ... ) {
-            def. (c ('x', 'y'), list (xy.coords (df) $ 'x', xy.coords (df) $ 'y'))
-            mdlL  <-  list (#  logNormF. (x,y), nukiF. (x,y), logHype3F. (x,y), weibullF. (x,y),
-                                dagum2F. (x,y), exGauss4F. (x,y), gbpF. (x,y), gb2F. (x,y), sinMadF. (x,y), jsuF. (x,y), logLogF. (x, y) )  %>%  setNames (distN2.)
-            return (mdlL)
+    leftX <- refx[which.max(yRef)]  # LRX(0.50, 0.95)[1]
+    rightX <- LRX(0.50, 0.95)[2]  # abline(v = LRX(0.50, 095))
+    D100 <- LRX(0.00, 1.00)[2]
+    refPartX <- refx[whichNear.(vec = refx, ref = leftX) : whichNear.(vec = refx, ref = rightX)]
+    refPartY <- yRef[whichNear.(vec = refx, ref = leftX) : whichNear.(vec = refx, ref = rightX)]
+    comPartX <- cx[whichNear.(vec = cx, ref = leftX) : whichNear.(vec = cx, ref = rightX)]
+
+    area <- function(x, y, ... ) sum(0.5 *diff(x) * (y[-1] +y[-length(y)])) %>% return (.)
+    recX <- recY <- vector()
+    for (stepW in c(0.1, 0.01, 1e-04, 1e-05)) {
+        if (stepW == 0.1) tenta <-  c(0, 1)  # Starters for mixing ratio in the loop range
+        Ratio <- tenta %>% {seq(.[1], .[2], by = stepW)}  # Make the range narrow gradually
+        Rss <- rep(NA, length (Ratio))
+        for (i in seq_along (Ratio)) {  # Compare not y but area due to different number of points between ref & composit
+            comPartY <- {Ratio [i] *yBase1 +(1 -Ratio [i]) *yBase2}  %>%  {.[whichNear.(vec = cx, ref = leftX) : whichNear.(vec = cx, ref = rightX)]}
+            Rss[i] <- {area(refPartX, refPartY) -area(comPartX, comPartY)} %>% {sum(. ^2)}
+        }
+        recX <- c(recX, Ratio)
+        recY <- c(recY, Rss)
+        tenta <- interval2.(Rss, valley = T) %>% Ratio[.]
+        if (length (tenta) == 1) break
     }
+    finalAns <- mean(tenta) %>% {c(., 1 -., 0)}
+    ## Matching ratio of the right tail (curve from D50 to D95) of dfRef
+    comPartX2 <- cx[whichNear.(vec = cx, ref = leftX) : whichNear.(vec = cx, ref = D100)]
+    comPartY2 <- {finalAns[1] *yBase1 +finalAns[2] *yBase2} %>% {.[whichNear.(vec = cx, ref = leftX) : whichNear.(vec = cx, ref = D100)]}
+    matchRatio_tail <- area(comPartX2, comPartY2) /area(refPartX, refPartY) -1
+    matchRatio_D50 <- {finalAns[1] *yBase1 +finalAns[2] *yBase2} %>% which.max(.) %>% cx[.] %>% {. /leftX -1}
+    return (list(Ans = finalAns, Tail_match = matchRatio_tail, D50_match = matchRatio_D50) )
 
-    ##  Quasi-y vector generated by a model ========================
-    arYiv.  <- function (df, x, ... ) {    #  mdl is got by arXiv. (), and bingo is got by which.min (getAIC. ()).  x is a vector in the target range.
-            mdlL  <-  arXiv. (df)
-            bingo  <-  getRMSE2. (mdlL)  %>%  which.min (.)    #  bingo also has the distribution name. try 'bingo'.
-            mdl  <-  mdlL [[bingo]]
-            yout  <-  function (bingo)  list (amoY., beniniY., betaY., betaPrimeY., bhpY., burr8Y., burr12Y., cauchyY., chiY., dagumY., dagum2Y., exBetaY., exGammaY.,
-exGenBetaY., exGauss3Y., exGauss4Y., exPowerY., fatigueY., beta4Y., kuma4Y., frechetY., gammaY., gbpY., gb2Y., gftY.,
-                                                         gGammaY., gGumbelY., gigY., gn1Y., gn2Y., gPearson7Y., gumbelY., invChiY., invGammaY., invGaussY., invRayleighY.,
-                                                         jsbY., jsuY., levyY., logisY., logGamY., logLogY., logNormY., nakagamiY., normY., nukiY., pearson3Y., pearson5Y.,
-pearson6Y., pearson7Y., pertY., pert2Y., prenticeY., rayleighY., rbwY., riceY., shGompY., sinMadY., skewNY.,
-skewLogNY., studentsTY., life3Y., logHype3Y., student3Y., weibull3Y., weibullY. ) [[bingo]]
-            qY  <-  yout (bingo) (mdl, x)
-            return (qY)
+    memo <- function(...) {
+        ratios <- seq(0, 1, by = 1e-5)
+        rss <- rep(NA, length(ratios))
+        for (i in seq_along(ratios)) {  # Compare not y but area due to different number of points between ref & composit
+            comPartY <- {ratios[i] *yBase1 +(1 -ratios[i]) *yBase2} %>% {. [whichNear.(vec = cx, ref = leftX) : whichNear.(vec = cx, ref = rightX)]}
+            rss[i] <- {area(refPartX, refPartY) -area(comPartX, comPartY)} %>% {sum(. ^2)}
+        }
+        finalAns <- which.min(rss) %>% ratios[.]
+        plot(ratios, rss, type = 'l', xlim = c(0, 1), ylim = pr.(range(rss), c(-1, 1), 0.08), cex.axis = 0.95)  # Too long to calculate
+        plot(data.frame(x = recX, y = recY) %>% arrange(x), type = 'o', xlim = c(0, 1), ylim = pr.(range (rss), c(-1, 1), 0.08), cex.axis = 0.95)
+        points(finalAns, min (rss), pch = 19, col = 'coral2')
+        mtext('Mixing Ratio of Base1', side = 1, las = 1, line = par ('mar')[1] -1.01, cex = 0.95)
+        mtext('Residual Sum of Square', side = 2, las = 3, line = par ('mar')[2] -0.95, cex = 0.95)
     }
-    arYivAll.  <- function (df, x, ... ) {    #  mdl is got by arXiv. (), and bingo is got by which.min (getAIC. ()).  x is a vector in the target range.
-            mdlL  <-  arXiv. (df)
-            yout  <-  function (bingo)  list (amoY., beniniY., betaY., betaPrimeY., bhpY., burr8Y., burr12Y., cauchyY., chiY., dagumY., dagum2Y., exBetaY., exGammaY.,
-exGenBetaY., exGauss3Y., exGauss4Y., exPowerY., fatigueY., beta4Y., kuma4Y., frechetY., gammaY., gbpY., gb2Y., gftY.,
-                                                         gGammaY., gGumbelY., gigY., gn1Y., gn2Y., gPearson7Y., gumbelY., invChiY., invGammaY., invGaussY., invRayleighY.,
-                                                         jsbY., jsuY., levyY., logisY., logGamY., logLogY., logNormY., nakagamiY., normY., nukiY., pearson3Y., pearson5Y.,
-pearson6Y., pearson7Y., pertY., pert2Y., prenticeY., rayleighY., rbwY., riceY., shGompY., sinMadY., skewNY.,
-skewLogNY., studentsTY., life3Y., logHype3Y., student3Y., weibull3Y., weibullY. ) [[bingo]]
-            yL  <-  list ()
-            for (i in seq (66))  yL [[i]]  <-  yout (i) (mdlL [[i]], x)
-            return (yL)
+}
+
+
+## Transforming rate of Frequency into Probability ========================
+freq2dens. <- function(df, ... ) {
+    def.(c('x', 'y'), list(df[, 1], df[, 2]))
+    areaRate <- 1 /sum(0.5 *diff(x) * (y[-1] +y[-length(y)]))
+    return (data.frame(x = x, y = y *areaRate))
+}
+
+
+## xy-coordinate of PSD curve from Microtrac data == (2019-07-19) ========================
+getXYlines. <- function(dt, cook = T, ... ) {
+    ## x channel and y frequency of PSD data
+    Xch <- str_which(names(dt), pattern = 'class') %>% names(dt)[.] %>% parse_number(.)
+    Ypsd <- select(dt, starts_with('class'))
+
+    ## slice y data at every row and transform PSD with interpolation
+    pullRealValues <- function (rowVec) {
+        if (is.na(rowVec) %>% all()) return (NA)
+        not0 <- which(rowVec != 0)  # y signals
+        sta <- first(not0) %>% {if (. == 1) 1 else . -1}  # leave two 0 on the both sides in y signals
+        end <- last(not0) %>% {if (. == ncol(Ypsd)) ncol(Ypsd) else . +1}
+        if (cook) tenta <- gamXY.(x = Xch [sta: end], y = rowVec [sta: end], boost = T, n.boost = 200) # 200 ch interpolated
+        if (! cook) tenta <- data.frame(x = Xch[sta: end], y = rowVec[sta: end]) # or raw data if you want
+        return (tenta %>% freq2dens.())
     }
-    miniYiv.  <- function (df, x, ... ) {
-            if (all (is.na (df)))  return (NA)
-            mdlL  <-  miniXiv. (df)
-            bingo  <-  getRMSE2. (mdlL)  %>%  which.min (.)    #  getAIC2. (mdlL)
-            mdl  <-  mdlL [[bingo]]
-            yout  <-  function (bingo)  list (dagum2Y., exGauss4Y., gbpY., gb2Y., sinMadY., jsuY., logLogY. ) [[bingo]]
-            qY  <-  yout (bingo) (mdl, x)
-            return (qY)
-    }    #  ex)  yBase  <-  miniYiv. (dfBase, cx = dfRef [, 1])
-    miniXYiv.  <- function (df, ... ) {
-            if (is.na (df) %>% all (.))  return (NA)
-            mdlL  <-  miniXiv. (df)
-            bingo  <-  getRMSE2. (mdlL)  %>%  which.min (.)    #  return the best numer with its name
-            mdl  <-  mdlL [[bingo]]
-            data.frame (x = df [, 1], y = fitted (mdl))  %>% return (.)
+    pmap(Ypsd, ~ pullRealValues(rowVec = c(...))) %>% return (.)  # = system.time(map(Ypsd %>% t(.) %>% as_tibble(.), pullRealValues))
+}
+
+
+## CSV reader for any data  ========================
+getCSV. <- function(...) getData.(timeSort = F) %>%  psdLab.() %>% return (.)
+
+
+## Correct a PSD label which is interpreted as date == (2019-05-10) ========================
+psdLab. <- function(dt, ... ) {
+    dt <- dt %>% 'dplyr'::filter(rowSums(is.na(.)) != ncol(.)) 
+    dt <- mutate_at(dt, 'ó±ìx', ~ gsub('åé', '-', .) %>% gsub('ì˙', '', .) %>% gsub('2001/2/3', '1/2-3', .))
+    ten <- dt[['ë™íËì˙éû']] %>% {.[! is.na(.)][1]} %>% str_count(., '/|:')
+    if (type_sum(dt[['ë™íËì˙éû']]) != 'dttm' && nrow(dt) > 0) {
+        dt <- mutate_at(dt, 'ë™íËì˙éû', parse_date_time2, orders = whichSize.(ten, 2:4, c('Ymd', 'YmdHM', 'YmdHMS')), tz = 'Asia/Tokyo')
     }
+    return (dt)
+}
 
-    ##  AIC evaluation by calling distribution archive (NOTE: mdlL is got by arXiv. (df) )  == (2019-11-05) ========================
-    getAIC.  <-  function (mdlL, ... )  map. (mdlL, aic.) %>%  t (.)  %>%  as_tibble (., .name_repair = NULL)  %>% setNames (distN.)  %>%  return (.)
-    getAIC2.  <-  function (mdlL, ... )  map. (mdlL, aic.) %>%  t (.)  %>%  as_tibble (., .name_repair = NULL)  %>% setNames (distN2.)  %>%  return (.)
-    getRMSE.  <-  function (mdlL, ... )  map. (mdlL, rmse.) %>%  t (.)  %>%  as_tibble (., .name_repair = NULL)  %>% setNames (distN.)  %>%  return (.)
-    getRMSE2.  <-  function (mdlL, ... )  map. (mdlL, rmse.) %>%  t (.)  %>%  as_tibble (., .name_repair = NULL)  %>% setNames (distN2.)  %>%  return (.)
 
-    ##  Residual Sum of Square  == (2019-05-23) ========================
-    rssFit.  <-  function (yRef, yBase1, yBase2, ... ) {
-            rss  <-  rep (NA, 1e4 +1)
-            ratios  <-  seq (0, 1, by = 1e-4)
-            for (i in seq_along (ratios))  rss [i]  <-  {yRef - (ratios [i] *yBase1 +(1 -ratios [i]) *yBase2)}  %>%  {sum (. ^2)}
-            finalAns  <-  which.min (rss)  %>%  ratios [.]
-        #  quickPlot. (list (data.frame (ratios, rss)), Xlims = c (0, 1), Xlab = 'Mixing Ratio of Base', Ylab = 'Residual Sum of Square'); points (finalAns, min (rss), pch = 19)
-            return (finalAns)
-    }
+## Error functions ========================
+unitNorm <-  function(x) 1 /sqrt(2 *pi) *exp(-x ^2 /2)
+erfc <- function(x) 2 *pnorm(x *sqrt(2), lower = F)  # https://stackoverflow.com/questions/29067916/error-function-erfz
+erfcx <- function(x) exp(x ^2) *erfc(x)  # Scaled complementary error function: https://en.wikipedia.org/wiki/Exponentially_modified_Gaussian_distribution
+stnorm <- function(x) 1 /sqrt(2 *pi) *exp(-1/2 *x ^2)  # standard normal probability density function
+stcum <- function(x) 1/2 *(1 +erfc(x /sqrt(2)))  # cumulative distribution funciton
 
-    ##  Residual Sum of Square ver.2  == (2019-11-14) ========================
-    rssFit2.  <-  function (yRef, yBase1, yBase2, yBase3, refx, cx, ... ) {    #  cx means composite x1 +x2 for y1 & y2.
-            LRX  <-  function (Lper, Rper, ... ) {
-                    cumsum (0.5 *diff (refx) * (yRef [-1] +yRef [-length (yRef)]))  %>%    #  plot (.)    #  This becomes a sigmoid curve
-                    {c (whichNear. (vec = ., ref = Lper), whichNear. (vec = ., ref = Rper)) +1}  %>%  refx [.]  %>% return (.)
-            }
-            leftX  <-  refx [which.max (yRef)]    #    LRX (0.50, 0.95) [1]
-            rightX  <-  LRX (0.50, 0.95) [2]    #  abline (v = LRX (0.50, 095))
-            D100  <-  LRX (0.00, 1.00) [2]
-            refPartX  <-  refx [whichNear. (vec = refx, ref = leftX) : whichNear. (vec = refx, ref = rightX)]
-            refPartY  <-  yRef [whichNear. (vec = refx, ref = leftX) : whichNear. (vec = refx, ref = rightX)]
-            comPartX  <-  cx [whichNear. (vec = cx, ref = leftX) : whichNear. (vec = cx, ref = rightX)]
-
-            area  <-  function (x, y, ... )  sum (0.5 *diff (x) * (y [-1] +y [-length (y)]))  %>%  return (.)
-            recX  <-  recY  <-  vector ()
-            for (stepW in c (0.1, 0.01, 1e-04, 1e-05)) {
-                    if (stepW == 0.1)  tenta  <-  c (0, 1) #  Starters for mixing ratio in the loop range
-                    Ratio  <-  tenta  %>%  {seq (. [1], . [2], by = stepW)}    #  Make the range narrow gradually
-                    Rss  <-  rep (NA, length (Ratio))
-                    for (i in seq_along (Ratio)) {    #  Compare not y but area due to different number of points between ref & composit
-                            comPartY  <-  {Ratio [i] *yBase1 +(1 -Ratio [i]) *yBase2}  %>%  {. [whichNear. (vec = cx, ref = leftX) : whichNear. (vec = cx, ref = rightX)]}
-                            Rss [i]  <-  {area (refPartX, refPartY) -area (comPartX, comPartY)}  %>%  {sum (. ^2)}
-                    }
-                    recX  <-  c (recX, Ratio)
-                    recY  <-  c (recY, Rss)
-                    tenta  <-  interval2. (Rss, valley = T) %>%  Ratio [.]
-                    if (length (tenta) == 1)  break
-            }
-            finalAns  <-  mean (tenta)  %>%  {c (., 1 -., 0)}
-            ##  Matching ratio of the right tail (curve from D50 to D95) of dfRef
-            comPartX2  <-  cx [whichNear. (vec = cx, ref = leftX) : whichNear. (vec = cx, ref = D100)]
-            comPartY2  <-  {finalAns [1] *yBase1 +finalAns [2] *yBase2}  %>%  {. [whichNear. (vec = cx, ref = leftX) : whichNear. (vec = cx, ref = D100)]}
-            matchRatio_tail  <-  area (comPartX2, comPartY2) /area (refPartX, refPartY) -1
-            matchRatio_D50  <-  {finalAns [1] *yBase1 +finalAns [2] *yBase2}  %>%  which.max (.)  %>%  cx [.]  %>%  {. /leftX -1}
-            return (list (Ans = finalAns, Tail_match = matchRatio_tail, D50_match = matchRatio_D50) )
-
-            memo  <-  function (...) {
-                    ratios  <-  seq (0, 1, by = 1e-5)
-                    rss  <-  rep (NA, length (ratios))
-                    for (i in seq_along (ratios)) {    #  Compare not y but area due to different number of points between ref & composit
-                            comPartY  <-  {ratios [i] *yBase1 +(1 -ratios [i]) *yBase2}  %>%  {. [whichNear. (vec = cx, ref = leftX) : whichNear. (vec = cx, ref = rightX)]}
-                            rss [i]  <-  {area (refPartX, refPartY) -area (comPartX, comPartY)}  %>%  {sum (. ^2)}
-                    }
-                    finalAns  <-  which.min (rss)  %>% ratios [.]
-                    plot (ratios, rss, type = 'l', xlim = c (0, 1), ylim = pr. (range (rss), c (-1, 1), 0.08), cex.axis = 0.95) #  Too long to calculate
-                    plot (data.frame (x = recX, y = recY) %>% arrange (x), type = 'o', xlim = c (0, 1), ylim = pr. (range (rss), c (-1, 1), 0.08), cex.axis = 0.95)
-                    points (finalAns, min (rss), pch = 19, col = 'coral2')
-                    mtext ('Mixing Ratio of Base1', side = 1, las = 1, line = par ('mar') [1] -1.01, cex = 0.95)
-                    mtext ('Residual Sum of Square', side = 2, las = 3, line = par ('mar') [2] -0.95, cex = 0.95)
-            }
-    }
-
-    ##  Transforming rate of Frequency into Probability ========================
-    freq2dens.  <-  function (df, ... ) {
-            def. (c ('x', 'y'), list (df [, 1], df [, 2]))
-            areaRate  <-  1 /sum (0.5 *diff (x) * (y [-1] +y [-length (y)]))
-            return (data.frame (x = x, y = y *areaRate))
-    }
-
-    ##  xy-coordinate of PSD curve from Microtrac data  == (2019-07-19) ========================
-    getXYlines.  <-  function (dt, cook = T, ... ) {
-            ##  x channel and y frequency of PSD data
-            Xch  <-  str_which (names (dt), pattern = 'class') %>%  names (dt) [.]  %>%  parse_number (.)
-            Ypsd  <-  select (dt, starts_with ('class'))
-
-            ##  slice y data at every row and transform PSD with interpolation
-            pullRealValues  <-  function (rowVec, ... ) {
-                    if (is.na (rowVec) %>% all (.))  return (NA)
-                    not0  <-  which (rowVec != 0)    #  y signals
-                    sta  <-  first (not0)  %>%  {if (. == 1)  1  else  . -1}    #  leave two 0 on the both sides in y signals
-                    end  <-  last (not0)  %>%  {if (. == ncol (Ypsd))  ncol (Ypsd)  else  . +1}
-                    if (cook)  tenta  <-  gamXY. (x = Xch [sta: end], y = rowVec [sta: end], boost = T, n.boost = 200)   #  200 ch interpolated
-                    if (! cook)  tenta  <-  data.frame (x = Xch [sta: end], y = rowVec [sta: end])   #  or raw data if you want
-                    return (tenta  %>%  freq2dens. (.) )
-            }
-            pmap (Ypsd, ~ pullRealValues (rowVec = c (...))) %>%  return (.)    #  = system.time ( map (Ypsd %>% t (.) %>% as_tibble (.), pullRealValues) )
-    }
-
-    ##  CSV reader for any data  ========================
-    getCSV.  <-  function (...)  getData. (timeSort = F) %>%  psdLab. (.)  %>%  return (.)
-
-    ##  Correct a PSD label which is interpreted as date  == (2019-05-10) ========================
-    psdLab.  <-  function (dt, ... ) {
-            dt <- dt %>% 'dplyr'::filter(rowSums(is.na(.)) != ncol(.)) 
-            dt  <-  mutate_at (dt, 'ó±ìx', ~ gsub ('åé', '-', .) %>%  gsub ('ì˙', '', .)  %>%  gsub ('2001/2/3', '1/2-3', .))
-            ten  <-  dt [['ë™íËì˙éû']]  %>%  {. [! is.na (.)] [1]}  %>%  str_count (., '/|:')
-            if (type_sum (dt [['ë™íËì˙éû']]) != 'dttm' && nrow (dt) > 0) {
-                   dt  <-  mutate_at (dt, 'ë™íËì˙éû', parse_date_time2, orders = whichSize. (ten, 2:4, c ('Ymd', 'YmdHM', 'YmdHMS')), tz = 'Asia/Tokyo')
-            }
-            return (dt)
-    }
-
-    ##  Error functions  ========================
-    unitNorm  <-  function (x)  1 /sqrt (2 *pi) *exp (-x ^2 /2)
-    erfc  <-  function (x)  2 *pnorm (x *sqrt (2), lower = F)    # https://stackoverflow.com/questions/29067916/error-function-erfz
-    erfcx  <-  function (x)  exp (x ^2) *erfc (x)    #  Scaled complementary error function: https://en.wikipedia.org/wiki/Exponentially_modified_Gaussian_distribution
-    stnorm  <-  function (x)  1 /sqrt (2 *pi) *exp (-1/2 *x ^2)    #  standard normal probability density function
-    stcum  <-  function (x)  1/2 *(1 +erfc (x /sqrt (2)))    # cumulative distribution funciton
 
     ##  Amoroso distribution  == https://pdfs.semanticscholar.org/cf53/f8c9dfa71bf17649feb86af5d7d8d294b06a.pdf ========================
     amoF.  <-  function (x, y, ... ) {
