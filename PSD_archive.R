@@ -94,10 +94,10 @@ miniXYiv. <- function(df, ... ) {
 
 
 ## AIC evaluation by calling distribution archive (NOTE: mdlL is got by arXiv.(df)) == (2019-11-05) ========================
-    getAIC. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN.) %>% return (.)
-    getAIC2. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN2.) %>% return (.)
-    getRMSE. <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN.) %>% return (.)
-    getRMSE2. <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN2.) %>% return (.)
+    getAIC. <- function(mdlL, ... ) skipMess.(map.(mdlL, aic.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN.)) %>% return (.)
+    getAIC2. <- function(mdlL, ... ) skipMess.(map.(mdlL, aic.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN2.)) %>% return (.)
+    getRMSE. <- function(mdlL, ... ) skipMess.(map.(mdlL, rmse.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN.)) %>% return (.)
+    getRMSE2. <- function(mdlL, ... ) skipMess.(map.(mdlL, rmse.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN2.)) %>% return (.)
 
 
 ## Residual Sum of Square == (2019-05-23) ========================
