@@ -68,7 +68,7 @@ alive <- function(dt, ... ) {
 ## Get ID label == (2019-05-01) ========================
 namePull <- function(dt, ... ) {
     if (is.na(dt) %>% all()) return (NULL)
-    if (map.(dt['粒度'], ~ skipMess.(ymd(.))) %>% {! anyNA()}) dt['粒度'] <- map.(dt['粒度'], str_sub, 6, 10)  # 2019/5/10 as chr
+    if (map.(dt['粒度'], ~ skipMess.(ymd(.))) %>% {! anyNA(.)}) dt['粒度'] <- map.(dt['粒度'], str_sub, 6, 10)  # 2019/5/10 as chr
     if (map.(dt['粒度'], str_detect, pattern = '月|日') %>% any()) dt['粒度'] <- map.(dt['粒度'], ~ gsub('月', '-', .) %>% gsub('日', '', .))  # 5月10日
     'tidyr'::unite(dt[c('砥粒種', '粒度', 'ロット番号')], sep = ' :: ', col = ID) %>% pull() %>% gsub('/', '|', .) %>% return (.)
 }
@@ -127,13 +127,15 @@ tunePSD <- function(D50 = F, ...) {
     ## Start it up
     rec <- rep(NA_character_, 15) %>%  # Vacant tibble for i to sum up 'recs' recording 
            setNames(c('計算日', map.(c ('砥粒種', '粒度', 'ロット番号', '配合率'), ~ str_c(., c ('A', 'B', 'C'))), 'D50誤差率', '右曲部面積の誤差率')) %>%
-           bind_rows() %>% mutate_at(1, ~ as.datetime(., tz = 'Asia/Tokyo')) %>% mutate_at(11:15, as.numeric)
+           bind_rows() %>% mutate_at(1, ~ as_datetime(., tz = 'Asia/Tokyo')) %>% mutate_at(11:15, as.numeric)
     rec[1, 1] <- now()
     for (i in 1:nrow(dt1)) for (j in 1:nrow(dt2)) for (k in 1:nrow(dt3)) {
         ## Selection
         di <- bind_rows(slice(dt1, i), slice(dt2, j), slice(dt3, k))  # Make a tibble of a combination with dt1(i), dt2(j), and dt3(k)
-        rec[1, 2:10] <- unlist(di[c('砥粒種', '粒度', 'ロット番号')])
-        if (Sys.getenv('OS') != '') rec[1, 5:7] <- map.(unlist(rec[1, 5:7]), ~ if (! is.na(.)) str_c('\'', .) else .)  # Add ' to 6-12 so as to read it on excel...
+        for (ii in 2:10) rec[1, ii] <- unlist(di[c('砥粒種', '粒度', 'ロット番号')])[ii -1]
+        if (Sys.getenv('OS') != '') {  # Add ' to 6-12 so as to read it on excel...
+            for (iii in 5:7) rec[1, iii] <- if(is.na(rec[[1, iii]])) NA else str_c('\'', rec[[1, iii]])
+        }
 
         ## Calculation for the mixing ratio
         iLcalc <- getXYlines.(di, cook = T) %>% setNames(c('b1', 'b2', 'b3'))
@@ -141,9 +143,11 @@ tunePSD <- function(D50 = F, ...) {
         def.(c('yRef', 'yBase1', 'yBase2', 'yBase3'), list(miniYiv.(dfRef, refx), miniYiv.(iLcalc$'b1', cx), miniYiv.(iLcalc$'b2', cx), miniYiv.(iLcalc$'b3', cx)))
         result_fit <- rssFit2.(yRef, yBase1, yBase2, yBase3, refx, cx)
         Ans <- result_fit$'Ans'
-        rec[1, 11:13] <- ifelse (! alive(di[3, ]), NA, Ans[3]) %>% c(Ans[-3], .)  # To show vacant cell in the output csv when C isn't used
+        ratio3 <- ifelse (! alive(di[3, ]), NA, Ans[3]) %>% c(Ans[-3], .)  # To show vacant cell in the output csv when C isn't used
+        for (iv in 11:13) rec[1, iv] <- ratio3[iv -10]
         d50 <- if (! alive(dfReal)) result_fit$'D50_match' else dt4$'D50' /refx[which.max(yRef)] -1  # Simu := D50 of PDF, Veri := D50 of measured
-        rec[1, 14:15] <- c(d50, result_fit$'Tail_match')
+        rec[1, 14] <- d50
+        rec[1, 15] <- result_fit$'Tail_match'
 
         ## Drawing data
         iLraw <- getXYlines.(di, cook = F) %>% setNames(c ('b1', 'b2', 'b3'))

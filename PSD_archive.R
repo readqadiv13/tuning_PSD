@@ -78,7 +78,7 @@ miniYiv. <- function(df, x, ... ) {
     if (all(is.na(df))) return (NA)
     mdlL <- miniXiv.(df)
     bingo <- getRMSE2.(mdlL) %>% which.min(.)  # getAIC2.(mdlL)
-    mdl <  mdlL[[bingo]]
+    mdl <- mdlL[[bingo]]
     yout <- function(bingo) list(dagum2Y., exGauss4Y., gbpY., gb2Y., sinMadY., jsuY., logLogY.)[[bingo]]
     qY <- yout(bingo)(mdl, x)
     return (qY)
@@ -94,10 +94,10 @@ miniXYiv. <- function(df, ... ) {
 
 
 ## AIC evaluation by calling distribution archive (NOTE: mdlL is got by arXiv.(df)) == (2019-11-05) ========================
-    getAIC. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN.) %>% return (.)
-    getAIC2. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN2.) %>% return (.)
-    getRMSE. <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN.) %>% return (.)
-    getRMSE2 <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t(.) %>% as_tibble(., .name_repair = NULL) %>% setNames(distN2.) %>% return (.)
+    getAIC. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN.) %>% return (.)
+    getAIC2. <- function(mdlL, ... ) map.(mdlL, aic.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN2.) %>% return (.)
+    getRMSE. <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN.) %>% return (.)
+    getRMSE2. <- function(mdlL, ... ) map.(mdlL, rmse.) %>% t() %>% as_tibble(., .name_repair = 'minimal') %>% set_names(distN2.) %>% return (.)
 
 
 ## Residual Sum of Square == (2019-05-23) ========================
